@@ -10,6 +10,8 @@ Bell_Integrator/
 
 │           └── com.example.stub/
 
+│               └── StubAppApplication.java
+
 │               └── StubController.java
 
 ├── pom.xml
