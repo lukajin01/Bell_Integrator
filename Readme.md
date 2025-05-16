@@ -20,6 +20,8 @@ Bell_Integrator/
 
 │ │ └── User.java
 
+├── jolokia-agent-jvm-2.2.9-javaagent.jar
+
 ├── pom.xml
 
 └── README.md
@@ -58,5 +60,5 @@ cd Bell_Integrator
 ```
 Код запуска spring с jolokia
 ```
-java -javaagent:jolokia-agent-jvm-2.2.9-javaagent.jar=port=8778,host=0.0.0.0 -jar stub-app-0.0.1-SNAPSHOT.jar
+java -javaagent:src/jolokia-agent-jvm-2.2.9-javaagent.jar=port=8778,host=0.0.0.0 -jar target/stub-app-0.0.1-SNAPSHOT.jar
 ```
