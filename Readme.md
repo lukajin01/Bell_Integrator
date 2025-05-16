@@ -4,15 +4,21 @@ Bell_Integrator/
 
 ├── src/
 
-│   └── main/
+│ └── main/
 
-│       └── java/
+│ └── java/
 
-│           └── com.example.stub/
+│ └── com.example.stub_app/
 
-│               └── StubAppApplication.java
+│ ├── StubAppApplication.java
 
-│               └── StubController.java
+│ ├── controller/
+
+│ │ └── StubController.java
+
+│ └── model/
+
+│ │ └── User.java
 
 ├── pom.xml
 
@@ -46,7 +52,11 @@ git clone https://github.com/lukajin01/Bell_Integrator.git
 cd Bell_Integrator
 ```
 
-Код запуска
+Код запуска spring
 ```
 ./mvnw spring-boot:run
+```
+Код запуска spring с jolokia
+```
+java -javaagent:jolokia-agent-jvm-2.2.9-javaagent.jar=port=8778,host=0.0.0.0 -jar stub-app-0.0.1-SNAPSHOT.jar
 ```
