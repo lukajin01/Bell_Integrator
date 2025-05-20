@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @RestController
 public class StubController {
 
@@ -17,13 +19,12 @@ public class StubController {
     @PostMapping("/login")
     public ResponseEntity<User> login(@Valid @RequestBody User inputUser) {
         simulateDelay();
-        User responseUser = new User(inputUser.getLogin(), inputUser.getPassword());
-        return ResponseEntity.ok(responseUser);
+        return ResponseEntity.ok(inputUser);
     }
 
     private void simulateDelay() {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 2001));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             System.err.println("Thread interrupted: " + e.getMessage());
