@@ -12,8 +12,8 @@ public class StubController {
 
     private final DataBaseWorker dbWorker = new DataBaseWorker();
 
-    @GetMapping("/login")
-    public ResponseEntity<?> getUserByLogin(@RequestParam String login) {
+    @GetMapping("/status")
+    public ResponseEntity<?> getStatus(@RequestParam String login) {
         simulateDelay();
         User user = dbWorker.findUserByLogin(login);
         if (user != null) {
@@ -30,7 +30,7 @@ public class StubController {
         try {
             int result = dbWorker.insertUser(inputUser);
             if (result > 0) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(inputUser);
+                return ResponseEntity.ok(inputUser);
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Insert failed");
@@ -48,4 +48,3 @@ public class StubController {
         }
     }
 }
-
