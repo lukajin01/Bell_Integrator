@@ -2,7 +2,7 @@ package com.example.stub_app.controller;
 
 import com.example.stub_app.model.User;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,16 +10,34 @@ import java.util.concurrent.ThreadLocalRandom;
 @RestController
 public class StubController {
 
-    @GetMapping("/status")
-    public ResponseEntity<String> getStatus() {
+    private final DataBaseWorker dbWorker = new DataBaseWorker();
+
+    @GetMapping("/login")
+    public ResponseEntity<?> getUserByLogin(@RequestParam String login) {
         simulateDelay();
-        return ResponseEntity.ok("{\"login\":\"Login1\",\"status\":\"ok\"}");
+        User user = dbWorker.findUserByLogin(login);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("User with login \"" + login + "\" not found");
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@Valid @RequestBody User inputUser) {
+    public ResponseEntity<?> login(@Valid @RequestBody User inputUser) {
         simulateDelay();
-        return ResponseEntity.ok(inputUser);
+        try {
+            int result = dbWorker.insertUser(inputUser);
+            if (result > 0) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(inputUser);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Insert failed");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+        }
     }
 
     private void simulateDelay() {
@@ -27,7 +45,7 @@ public class StubController {
             Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 2001));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            System.err.println("Thread interrupted: " + e.getMessage());
         }
     }
 }
+

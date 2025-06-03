@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -17,15 +16,17 @@ public class User {
     private String login;
     @NotBlank
     private String password;
-    private String date;
+    @NotBlank
+    private String email;
+    private LocalDate date;
 
     public User(String login, String password) {
         this.login = login;
         this.password = password;
-        this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.date = LocalDate.now();
     }
 
     public void setDateToNow() {
-        this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.date = LocalDate.now();
     }
 }
