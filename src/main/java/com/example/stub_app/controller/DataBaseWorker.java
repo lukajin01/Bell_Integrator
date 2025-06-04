@@ -1,5 +1,6 @@
 package com.example.stub_app.controller;
 
+import com.example.stub_app.exception.UserNotFoundException;
 import com.example.stub_app.model.User;
 
 import java.sql.*;
@@ -29,6 +30,9 @@ public class DataBaseWorker {
                             resultSet.getString("email"),
                             resultSet.getDate("date").toLocalDate()
                     );
+                }
+                else {
+                    throw new UserNotFoundException(login);
                 }
             }
         } catch (SQLException e) {

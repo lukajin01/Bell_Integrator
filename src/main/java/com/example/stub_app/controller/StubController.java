@@ -1,5 +1,6 @@
 package com.example.stub_app.controller;
 
+import com.example.stub_app.exception.UserNotFoundException;
 import com.example.stub_app.model.User;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
@@ -15,12 +16,11 @@ public class StubController {
     @GetMapping("/status")
     public ResponseEntity<?> getStatus(@RequestParam String login) {
         simulateDelay();
-        User user = dbWorker.findUserByLogin(login);
-        if (user != null) {
+        try {
+            User user = dbWorker.findUserByLogin(login);
             return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("User with login \"" + login + "\" not found");
+        } catch (UserNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
