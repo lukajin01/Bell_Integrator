@@ -2,12 +2,14 @@ package com.example.stub_app.controller;
 
 import com.example.stub_app.exception.UserNotFoundException;
 import com.example.stub_app.model.User;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
+@Repository
 public class DataBaseWorker {
 
-    private static final String URL = "jdbc:postgresql://postgres:5432/mydb";
+    private static final String URL = "jdbc:postgresql://192.168.1.13:5432/mydb";
     private static final String USER = "user";
     private static final String PASSWORD = "password";
 
@@ -22,6 +24,7 @@ public class DataBaseWorker {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, login);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     user = new User(
@@ -30,8 +33,7 @@ public class DataBaseWorker {
                             resultSet.getString("email"),
                             resultSet.getDate("date").toLocalDate()
                     );
-                }
-                else {
+                } else {
                     throw new UserNotFoundException(login);
                 }
             }
@@ -41,7 +43,7 @@ public class DataBaseWorker {
         return user;
     }
 
-    public int insertUser(User user){
+    public int insertUser(User user) throws SQLException {
         String sql = "INSERT INTO users (login, password, date) VALUES (?, ?, CURRENT_DATE);\n" +
                 "INSERT INTO profiles (login, email) VALUES (?, ?);";
 
@@ -63,11 +65,10 @@ public class DataBaseWorker {
                 currentRows = ps.getUpdateCount();
                 totalRowsAffected += (currentRows != -1) ? currentRows : 0;
             }
-
-        } catch (SQLException e) {
-            System.err.println("Ошибка при вставке пользователя: " + e.getMessage());
         }
-
+        if (totalRowsAffected == 0) {
+            throw new SQLException("Insert operation affected 0 rows");
+        }
         return totalRowsAffected;
     }
 }
