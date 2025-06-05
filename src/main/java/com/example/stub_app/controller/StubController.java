@@ -2,6 +2,7 @@ package com.example.stub_app.controller;
 
 import com.example.stub_app.exception.UserNotFoundException;
 import com.example.stub_app.model.User;
+import com.example.stub_app.util.FileWorker;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -14,10 +15,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class StubController {
 
     private final DataBaseWorker dbWorker;
+    private final FileWorker fileWorker;
 
     @Autowired
-    public StubController(DataBaseWorker dbWorker) {
+    public StubController(DataBaseWorker dbWorker, FileWorker fileWorker) {
         this.dbWorker = dbWorker;
+        this.fileWorker = fileWorker;
     }
 
     @GetMapping("/status")
@@ -25,10 +28,20 @@ public class StubController {
         simulateDelay();
         try {
             User user = dbWorker.findUserByLogin(login);
+            fileWorker.writeUser(user);
             return ResponseEntity.ok(user);
         } catch (UserNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().body("Error: " + ex.getMessage());
         }
+    }
+
+    @GetMapping("/random")
+    public ResponseEntity<String> getRandom() {
+        simulateDelay();
+        String randomJson = fileWorker.readRandomLine();
+        return ResponseEntity.ok(randomJson);
     }
 
     @PostMapping("/login")
@@ -38,11 +51,9 @@ public class StubController {
             int result = dbWorker.insertUser(inputUser);
             return ResponseEntity.ok(inputUser);
         } catch (SQLException e) {
-            // Ошибка при вставке — возвращаем 500 и сообщение об ошибке
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Database error: " + e.getMessage());
         } catch (Exception e) {
-            // Другие ошибки (например, валидация JSON)
             return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
         }
     }

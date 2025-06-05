@@ -1,0 +1,10 @@
+{"login":"alice","password":"pass123","email":"alice@example.com","date":"2025-06-01"}
+{"login":"bob","password":"qwerty","email":"bob@example.com","date":"2025-06-01"}
+{"login":"charlie","password":"abc123","email":"charlie@example.com","date":"2025-06-01"}
+{"login":"dave","password":"xyz789","email":"dave@example.com","date":"2025-06-01"}
+{"login":"eve","password":"password","email":"eve@example.com","date":"2025-06-01"}
+{"login":"frank","password":"letmein","email":"frank@example.com","date":"2025-06-01"}
+{"login":"grace","password":"monkey","email":"grace@example.com","date":"2025-06-01"}
+{"login":"heidi","password":"trustno1","email":"heidi@example.com","date":"2025-06-01"}
+{"login":"ivan","password":"123456","email":"ivan@example.com","date":"2025-06-01"}
+{"login":"judy","password":"welcome","email":"judy@example.com","date":"2025-06-01"}
